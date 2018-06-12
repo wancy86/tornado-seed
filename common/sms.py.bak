@@ -1,0 +1,46 @@
+import urllib
+from random import randint
+import uuid
+import time
+import hashlib
+from tornado import httpclient, gen
+from config import SMS
+
+
+@gen.coroutine
+def send(mobile, cat='login'):
+    code = str(randint(1000, 9999))
+    Nonce = str(uuid.uuid4()).replace('-', '')
+    CurTime = str(int(time.time()))
+    CheckSum = hashlib.sha1((SMS['AppSecret'] + Nonce + CurTime).encode('utf8')).hexdigest()
+    headers = {
+        'AppKey': SMS['AppKey'],
+        'Nonce': Nonce,
+        'CurTime': CurTime,
+        'CheckSum': CheckSum,
+        'Content-Type': 'application/json;charset=UTF-8'
+    }
+
+    if cat == 'buy-sucess':
+        data = {
+            'templateid': SMS['Type'][cat],
+            'mobiles': '["{}"]'.format(mobile)
+        }
+        SMS['URL'] = SMS['URL'].replace('sendcode', 'sendtemplate')
+    else:
+        data = {
+            'mobile': mobile,
+            'authCode': code,
+            'templateid': SMS['Type'][cat]
+        }
+
+    url = SMS['URL'] + '?' + urllib.parse.urlencode(data)
+    request = httpclient.HTTPRequest(url, method="POST", headers=headers, body='', validate_cert=False)
+    response = yield httpclient.AsyncHTTPClient().fetch(request)
+    print(data)
+    print(response.body)
+    raise gen.Return(code)
+
+
+if __name__ == '__main__':
+    send(18665369920)

@@ -1,0 +1,27 @@
+-- python and pip
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.6
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python3.6 get-pip.py
+
+-- toolsget
+sudo pip install virtualenv
+sudo apt-get install supervisor
+sudo apt-get install nginx
+sudo apt-get install git
+sudo apt-get install  openjdk-7-jdk
+
+-- packages
+sudo pip install tornado
+sudo pip install requests
+sudo pip install pymysql
+sudo pip install sqlalchemy
+sudo pip install filetype 
+sudo pip install xlwt -- excel操作的库
+sudo pip install xlrd -- excel读取的库
+sudo pip install cryptography
+sudo pip install jpush
+sudo pip install xmltodict
+sudo pip install Pillow
+sudo pip install qrcode
